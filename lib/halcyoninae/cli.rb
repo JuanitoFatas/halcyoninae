@@ -1,16 +1,18 @@
 require "halcyoninae/commander"
-require "halcyoninae/arguments_parser"
-require "halcyoninae/options_parser"
+require "halcyoninae/parsers/arguments"
+require "halcyoninae/parsers/options"
 
 module Halcyoninae
   class CLI
-    def initialize(registries:, argv: ARGV)
+    def initialize(program_name:, registries:, argv: ARGV)
+      @program_name = program_name
       @registries = registries
       @argv = argv
     end
 
     def run
       Halcyoninae::Commander.new(
+        program_name: program_name,
         registries: registries,
         arguments: arguments,
         options: options
@@ -18,7 +20,7 @@ module Halcyoninae
     end
 
     private
-    attr_reader :registries, :argv
+    attr_reader :program_name, :registries, :argv
 
     def arguments
       Halcyoninae::ArgumentsParser.new(argv).run

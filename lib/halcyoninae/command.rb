@@ -1,15 +1,41 @@
 # frozen_string_literal: true
 
+require "halcyoninae/errors/raise_not_implemented_error"
+
 require "halcyoninae/arguments/required"
 require "halcyoninae/options/long"
 
 module Halcyoninae
   class Command
-    def initialize(arguments:, options:, position:)
+    def required_arguments
+      return [] unless arguments
+
+      arguments.select { |argument| argument.is_a? RequiredArgument }
+    end
+
+    def arguments
+      RaiseNotImplementedError.new(__method__, self.class.name).run
+    end
+
+    def options
+      RaiseNotImplementedError.new(__method__, self.class.name).run
+    end
+
+    def runner
+      RaiseNotImplementedError.new(__method__, self.class.name).run
+    end
+
+    def operations
+      RaiseNotImplementedError.new(__method__, self.class.name).run
+    end
+
+    def initialize(arguments: [], options: {}, position: 0)
       @__arguments = arguments.drop(position)
       @__options = options
 
-      parse_arguments && parse_options
+      if !arguments.empty? || !options.empty?
+        parse_arguments && parse_options
+      end
     end
 
     def run
@@ -32,11 +58,15 @@ module Halcyoninae
       Array(arguments).each_with_index do |argument, index|
         value = @__arguments[index]
 
-        argument.validate(value)
+        if argument.is_a? RequiredArgument
+          argument.validate(value)
+        end
 
-        instance_variable_name = "@__#{argument.name}"
-        set_instance_variable(instance_variable_name, value)
-        define_instance_method(argument.name, instance_variable_name)
+        if argument.is_a? Argument
+          instance_variable_name = "@__#{argument.name}"
+          set_instance_variable(instance_variable_name, value)
+          define_instance_method(argument.name, instance_variable_name)
+        end
       end
     end
 

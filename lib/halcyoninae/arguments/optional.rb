@@ -3,16 +3,13 @@
 require_relative "argument"
 
 module Halcyoninae
-  class RequiredArgument < Argument
+  class OptionalArgument < Argument
     def required?
-      true
+      false
     end
 
     def validate(value)
-      if value.nil?
-        IO.new.puts("#{desc} <#{name}>")
-        exit(129)
-      end
+      # no need to do anything
     end
   end
 end

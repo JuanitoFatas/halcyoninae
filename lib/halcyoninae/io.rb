@@ -4,7 +4,7 @@ module Halcyoninae
   class IO
     extend Forwardable
 
-    delegate %i(puts) => "@outs"
+    delegate %i(puts) => "@out"
 
     def initialize(out: $stdout)
       @out = out

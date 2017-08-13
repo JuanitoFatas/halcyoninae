@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+$LOAD_PATH << File.expand_path(".")
+
 require "bundler/setup"
 require "halcyoninae"
 

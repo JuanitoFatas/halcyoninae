@@ -20,7 +20,10 @@ module Halcyoninae
       [arguments, right].flatten.compact
     end
 
+    NoArguments = nil
     def arguments
+      return NoArguments if left.nil?
+
       left.reject { |arg| option?(arg) }
     end
 
